@@ -4,7 +4,7 @@ import { useAdmin } from '../context/AdminContext'
 
 const NAV = [
     {
-        to: '/admin', label: 'Dashboard',
+        to: '/admin', label: 'Overview',
         icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.8"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.8"/></svg>,
     },
     {
@@ -12,7 +12,7 @@ const NAV = [
         icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M9 12h6M9 16h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>,
     },
     {
-        to: '/admin/inventory', label: 'Inventory',
+        to: '/admin/inventory', label: 'Products',
         icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>,
     },
     {
@@ -20,7 +20,7 @@ const NAV = [
         icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="1.8"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>,
     },
     {
-        to: '/admin/blogs', label: 'Blog Posts',
+        to: '/admin/blogs', label: 'Content',
         icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>,
     },
 ]
@@ -97,10 +97,19 @@ const AdminLayout = () => {
                     <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray hover:text-black transition-colors">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
                     </button>
+                    {/* Breadcrumb placeholder */}
                     <div className="flex-1" />
+                    {/* Right side */}
                     <div className="flex items-center gap-3">
-                        <div className="w-[8px] h-[8px] rounded-full bg-green-500"></div>
-                        <span className="text-[13px] text-gray font-medium">{adminUser?.name}</span>
+                        <NavLink to="/" target="_blank" className="text-[12px] text-gray hover:text-black transition-colors flex items-center gap-1">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            View Store
+                        </NavLink>
+                        <div className="w-[1px] h-[16px] bg-[#E5E5E5]"></div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-[8px] h-[8px] rounded-full bg-green-500"></div>
+                            <span className="text-[13px] text-gray font-medium">{adminUser?.name}</span>
+                        </div>
                     </div>
                 </header>
 
