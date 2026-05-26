@@ -22,11 +22,12 @@ import OrderDetail from './Pages/OrderDetail'
 import AdminLogin     from './admin/AdminLogin'
 import AdminLayout    from './admin/AdminLayout'
 import AdminGuard     from './admin/AdminGuard'
-import AdminDashboard from './admin/pages/AdminDashboard'
-import AdminOrders    from './admin/pages/AdminOrders'
-import AdminInventory from './admin/pages/AdminInventory'
-import AdminCustomers from './admin/pages/AdminCustomers'
-import AdminBlogs     from './admin/pages/AdminBlogs'
+import AdminDashboard   from './admin/pages/AdminDashboard'
+import AdminOrders      from './admin/pages/AdminOrders'
+import AdminOrderDetail from './admin/pages/AdminOrderDetail'
+import AdminInventory   from './admin/pages/AdminInventory'
+import AdminCustomers   from './admin/pages/AdminCustomers'
+import AdminBlogs       from './admin/pages/AdminBlogs'
 
 const App = () => {
   return (
@@ -61,11 +62,12 @@ const App = () => {
           </AdminGuard>
         }
       >
-        <Route index          element={<AdminDashboard />} />
-        <Route path="orders"    element={<AdminOrders />} />
-        <Route path="inventory" element={<AdminInventory />} />
-        <Route path="customers" element={<AdminCustomers />} />
-        <Route path="blogs"     element={<AdminBlogs />} />
+        <Route index              element={<AdminDashboard />} />
+        <Route path="orders"      element={<AdminOrders />} />
+        <Route path="orders/:ref" element={<AdminOrderDetail />} />
+        <Route path="inventory"   element={<AdminInventory />} />
+        <Route path="customers"   element={<AdminCustomers />} />
+        <Route path="blogs"       element={<AdminBlogs />} />
       </Route>
 
       {/* Fallback */}

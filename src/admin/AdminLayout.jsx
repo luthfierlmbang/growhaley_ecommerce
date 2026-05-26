@@ -36,6 +36,15 @@ const BREADCRUMBS = {
     '/admin/blogs':      'Content',
 }
 
+const getBreadcrumb = (pathname) => {
+    // /admin/orders/:ref
+    const orderDetailMatch = pathname.match(/^\/admin\/orders\/(.+)$/)
+    if (orderDetailMatch) return { parent: { label: 'Orders', to: '/admin/orders' }, current: orderDetailMatch[1] }
+    const label = BREADCRUMBS[pathname]
+    if (label) return { current: label }
+    return { current: 'Admin' }
+}
+
 const AdminLayout = () => {
     const { adminUser, adminLogout } = useAdmin()
     const navigate = useNavigate()
@@ -45,7 +54,7 @@ const AdminLayout = () => {
 
     const handleLogout = () => { adminLogout(); navigate('/admin/login') }
 
-    const breadcrumb = BREADCRUMBS[location.pathname] || 'Admin'
+    const breadcrumb = getBreadcrumb(location.pathname)
 
     /* ── ⌘K / Ctrl+K shortcut ── */
     useEffect(() => {
@@ -130,7 +139,15 @@ const AdminLayout = () => {
                     <div className="flex items-center gap-2 text-[13px]">
                         <span className="text-gray">Admin</span>
                         <span className="text-gray">/</span>
-                        <span className="font-medium text-black">{breadcrumb}</span>
+                        {breadcrumb.parent ? (
+                            <>
+                                <NavLink to={breadcrumb.parent.to} className="text-gray hover:text-black transition-colors">{breadcrumb.parent.label}</NavLink>
+                                <span className="text-gray">/</span>
+                                <span className="font-medium text-black">{breadcrumb.current}</span>
+                            </>
+                        ) : (
+                            <span className="font-medium text-black">{breadcrumb.current}</span>
+                        )}
                     </div>
 
                     {/* Spacer */}
