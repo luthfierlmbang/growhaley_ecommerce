@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { Form, Modal } from 'react-bootstrap'
 import { CloseIcon } from '../Icon/Icon'
+import { useAuth } from '../../context/AuthContext'
 
 export const AuthStepModal = ({ show, handleClose, handleShow, StatusModal, setStatusModal }) => {
     const onEventClick = (step) => {
@@ -25,13 +26,13 @@ export const AuthStepModal = ({ show, handleClose, handleShow, StatusModal, setS
 export const StepModal = ({ show, handleClose, handleShow, StatusModal, setStatusModal, onEventClick }) => {
     const showingForm = (step) => {
         switch (step) {
-            case "login":          return <LoginContent onEventClick={onEventClick} />
-            case "register":       return <RegisterContent onEventClick={onEventClick} />
-            case "forgot password":return <ForgotContent onEventClick={onEventClick} />
+            case "login":             return <LoginContent onEventClick={onEventClick} handleClose={handleClose} />
+            case "register":          return <RegisterContent onEventClick={onEventClick} />
+            case "forgot password":   return <ForgotContent onEventClick={onEventClick} />
             case "verify your email": return <VerifyContent onEventClick={onEventClick} />
-            case "change password":return <ChangeContent onEventClick={onEventClick} />
-            case "succsess":       return <SuccsessContent onEventClick={onEventClick} />
-            default:               return null
+            case "change password":   return <ChangeContent onEventClick={onEventClick} />
+            case "succsess":          return <SuccsessContent onEventClick={onEventClick} />
+            default:                  return null
         }
     }
     return (
@@ -47,31 +48,29 @@ export const StepModal = ({ show, handleClose, handleShow, StatusModal, setStatu
 }
 
 /* ─── Login ─── */
-const LoginContent = ({ onEventClick }) => {
+const LoginContent = ({ onEventClick, handleClose }) => {
+    const auth = useAuth()
     const [togglePassword, setTogglePassword] = useState(true)
     const [rememberMe, setRememberMe] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const [loggedIn, setLoggedIn] = useState(false)
-
-    // Demo credentials
-    const CREDENTIALS = { email: 'admin@lux.com', password: 'lux2025' }
 
     const handleLogin = () => {
         if (!email || !password) {
             setError('Please fill in all fields.')
             return
         }
-        if (email === CREDENTIALS.email && password === CREDENTIALS.password) {
+        const result = auth.login(email, password)
+        if (result.success) {
             setError('')
-            setLoggedIn(true)
+            if (handleClose) handleClose()
         } else {
-            setError('Invalid email or password.')
+            setError(result.error)
         }
     }
 
-    if (loggedIn) {
+    if (auth.isLoggedIn) {
         return (
             <Fragment>
                 <div className="text-center py-4">
@@ -82,10 +81,10 @@ const LoginContent = ({ onEventClick }) => {
                     </div>
                     <h3 className='text-[20px] lg:text-[24px] font-Helvetica mb-2'>Welcome back!</h3>
                     <p className='text-[14px] lg:text-[16px] text-gray mb-1'>Logged in as</p>
-                    <p className='font-medium text-[14px] lg:text-[16px] text-orange mb-6'>{email}</p>
+                    <p className='font-medium text-[14px] lg:text-[16px] text-orange mb-6'>{auth.user?.email}</p>
                     <button
                         type="button"
-                        onClick={() => { setLoggedIn(false); setEmail(''); setPassword('') }}
+                        onClick={() => { auth.logout(); if (handleClose) handleClose() }}
                         className='font-medium text-sm text-orange !border-orange btnClass hover:bg-orange hover:text-white cursor-pointer'
                     >
                         Sign Out

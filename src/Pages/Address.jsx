@@ -34,7 +34,7 @@ const Address = () => {
                     <Row className='justify-center'>
                         <Col lg={8}>
                             <AnimatedSection animation="fade-down">
-                                <h2 className='font-normal text-[24px] md:text-[28px] text-[32px] font-Helvetica mb-4'>Address</h2>
+                                <h2 className='font-Helvetica font-normal text-[24px] md:text-[28px] lg:text-[32px] mb-4'>Address</h2>
                                 <h5 className='font-medium text-[14px] lg:text-[16px] mb-3'>Shipping Address</h5>
                             </AnimatedSection>
 

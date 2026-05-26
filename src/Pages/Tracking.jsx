@@ -18,7 +18,7 @@ const Tracking = () => {
             <section>
                 <Container>
                     <AnimatedSection animation="fade-down">
-                        <h3 className='font-Helvetica text-[32px] mb-6'>Order Tracking</h3>
+                        <h3 className='font-Helvetica font-normal text-[24px] md:text-[28px] lg:text-[32px] mb-6'>Order Tracking</h3>
                     </AnimatedSection>
 
                     <AnimatedSection animation="fade-up" delay="anim-delay-100">

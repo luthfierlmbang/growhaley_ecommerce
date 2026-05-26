@@ -34,7 +34,7 @@ const Terms = () => {
                         <Col md={10}>
                             <AnimatedSection animation="fade-down">
                                 <div className="text-center mb-8">
-                                    <h3 className='font-normal font-Helvetica text-[24px] md:text-[28px] text-[32px] mb-2'>Terms of Conditions</h3>
+                                    <h3 className='font-Helvetica font-normal text-[24px] md:text-[28px] lg:text-[32px] mb-2'>Terms of Conditions</h3>
                                     <p className='text-[14px] lg:text-[16px] text-[#A3A3A3]'>Effective Date: <span className="text-black">November 28, 2023</span></p>
                                 </div>
                             </AnimatedSection>

@@ -8,8 +8,13 @@ import { PaginationDetail } from '../Components/Pagination/Pagination'
 import { CardProduct } from '../Components/Card/Card'
 import { dataProduct } from '../data/products'
 import AnimatedSection from '../Components/Common/AnimatedSection'
+import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
 
 const Detail = () => {
+    const auth = useAuth()
+    const { addToCart } = useCart()
+
     const sizeContent = ["XS", "S", "M", "L", "XL"]
     const colorContent = ["#D574B2", "#723020", "#CDBF9A", "#171717", "#838382"]
     const relatedProducts = [...dataProduct, dataProduct[0]]
@@ -17,6 +22,29 @@ const Detail = () => {
     const [toogleTab, settoogleTab] = useState("Details")
     const [toogleFormReview, settoogleFormReview] = useState(false)
     const [toogleFormDiscussion, settoogleFormDiscussion] = useState(false)
+    const [selectedSize, setSelectedSize] = useState(null)
+    const [selectedColor, setSelectedColor] = useState(null)
+    const [toast, setToast] = useState(false)
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+
+    const handleAddToCart = () => {
+        if (!auth.isLoggedIn) {
+            setShowLoginPrompt(true)
+            setTimeout(() => setShowLoginPrompt(false), 3000)
+            return
+        }
+        const product = {
+            id: 'winter-coat',
+            name: 'Winter Coat',
+            price: 124.99,
+            img: '/images/it (2).png',
+            selectedSize: selectedSize || 'M',
+            selectedColor: selectedColor || colorContent[0],
+        }
+        addToCart(product)
+        setToast(true)
+        setTimeout(() => setToast(false), 2500)
+    }
 
     const Details = () => (
         <Fragment>
@@ -208,6 +236,18 @@ const Detail = () => {
 
     return (
         <Fragment>
+            {/* Toast notification */}
+            {toast && (
+                <div className="fixed bottom-6 right-6 z-[9999] bg-black text-white px-5 py-3 rounded-[12px] text-[14px] font-medium shadow-lg transition-all duration-300">
+                    ✓ Added to cart!
+                </div>
+            )}
+            {showLoginPrompt && (
+                <div className="fixed bottom-6 right-6 z-[9999] bg-orange text-white px-5 py-3 rounded-[12px] text-[14px] font-medium shadow-lg transition-all duration-300">
+                    Please login to add items to cart
+                </div>
+            )}
+
             {/* ── Product Detail ── */}
             <section>
                 <Container>
@@ -237,7 +277,16 @@ const Detail = () => {
                                     <div className="flex items-center flex-wrap sm:flex-nowrap gap-2 lg:gap-3">
                                         <div className="flex items-center flex-wrap sm:flex-nowrap gap-2 lg:gap-3">
                                             {sizeContent.map((obj) => (
-                                                <div key={obj} className='w-[40px] h-[40px] rounded-full border border-solid border-[#E5E5E5] flex items-center justify-center uppercase text-[16px] lg:text-[18px]'>{obj}</div>
+                                                <div
+                                                    key={obj}
+                                                    onClick={() => setSelectedSize(obj)}
+                                                    className={
+                                                        'w-[40px] h-[40px] rounded-full border border-solid flex items-center justify-center uppercase text-[16px] lg:text-[18px] cursor-pointer ' +
+                                                        (selectedSize === obj ? 'border-orange bg-orange text-white' : 'border-[#E5E5E5]')
+                                                    }
+                                                >
+                                                    {obj}
+                                                </div>
                                             ))}
                                         </div>
                                         <div className='flex items-center gap-2'>
@@ -253,7 +302,14 @@ const Detail = () => {
                                     <h3 className='font-normal text-[16px] lg:text-[18px] mb-3'>Select Colors</h3>
                                     <div className="flex items-center gap-3">
                                         {colorContent.map((obj) => (
-                                            <div key={obj} className="px-[2px] py-[2px] rounded-full border border-solid border-white">
+                                            <div
+                                                key={obj}
+                                                onClick={() => setSelectedColor(obj)}
+                                                className={
+                                                    "px-[2px] py-[2px] rounded-full border border-solid cursor-pointer " +
+                                                    (selectedColor === obj ? 'border-orange' : 'border-white')
+                                                }
+                                            >
                                                 <div className="w-[32px] h-[32px] rounded-full" style={{ backgroundColor: obj }}></div>
                                             </div>
                                         ))}
@@ -264,7 +320,12 @@ const Detail = () => {
                             <AnimatedSection animation="fade-up" delay="anim-delay-400">
                                 <div className="mt-10 flex items-center gap-3">
                                     <div className='font-medium text-[14px] lg:text-[16px] !border-[#E5E5E5] btnClass'>$124.99</div>
-                                    <a href='#!' className='font-medium text-[14px] lg:text-[16px] !border-orange bg-orange text-white btnClass w-full min-w-fit lg:min-w-[277px] text-center'>Add To Cart</a>
+                                    <button
+                                        onClick={handleAddToCart}
+                                        className='font-medium text-[14px] lg:text-[16px] !border-orange bg-orange text-white btnClass w-full min-w-fit lg:min-w-[277px] text-center cursor-pointer'
+                                    >
+                                        Add To Cart
+                                    </button>
                                 </div>
                                 <hr className='border-[#E5E5E5] mt-12 mb-6' />
                                 <div className="flex flex-wrap gap-3 text-[16px] lg:text-[18px]">

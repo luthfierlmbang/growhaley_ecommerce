@@ -2,18 +2,48 @@ import React, { Fragment, useState } from 'react'
 import { Col, Container, Form, Modal, Row } from 'react-bootstrap'
 import { RightArrowIcon } from '../Components/Icon/Icon'
 import AnimatedSection from '../Components/Common/AnimatedSection'
+import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
 
 const Payment = () => {
+    const auth = useAuth()
+    const { cartItems, placeOrder, clearCart } = useCart()
     const [ToogleCheck, setToogleCheck] = useState("")
+    const [show, setShow] = useState(false)
+    const [currentOrder, setCurrentOrder] = useState(null)
+
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
+    const total = subtotal
+
+    const handleClose = () => setShow(false)
+    const handleShow = (e) => {
+        e.preventDefault()
+        const ref = 'LUX' + Math.random().toString(36).substr(2, 9).toUpperCase()
+        const orderData = {
+            ref,
+            items: [...cartItems],
+            total,
+            date: new Date(),
+            paymentMethod: ToogleCheck || 'Card',
+            status: 'Completed',
+        }
+        placeOrder(orderData)
+        setCurrentOrder(orderData)
+        clearCart()
+        setShow(true)
+    }
+
     const roundChekck = (e) => (
         <div onClick={() => setToogleCheck(e)} className={"w-[24px] h-[24px] rounded-full border border-solid flex items-center justify-center cursor-pointer " + (ToogleCheck === e ? "border-orange bg-orange" : "border-[#A3A3A3]")}>
             {ToogleCheck === e && <img src="./../images/check (3).svg" alt="" />}
         </div>
     )
 
-    const [show, setShow] = useState(false)
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
+    const formatDate = (d) => {
+        if (!d) return ''
+        const date = new Date(d)
+        return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+    }
 
     return (
         <Fragment>
@@ -22,32 +52,55 @@ const Payment = () => {
                     <div className="text-center">
                         <img src="./../images/Checkmark, Done, Check.svg" className='mx-auto mb-3' alt="" />
                         <h3 className='font-normal text-[18px] lg:text-[24px] font-Helvetica'>Payment Success!</h3>
-                        <p className='text-[14px] lg:text-[16px] text-gray'>Thanks for your order, the order confirmation has <br className='hidden sm:block' /> been sent to customer@gmail.com</p>
+                        <p className='text-[14px] lg:text-[16px] text-gray'>Thanks for your order, the order confirmation has <br className='hidden sm:block' /> been sent to {auth.user?.email || 'your email'}</p>
                         <div className="my-6">
                             <p className='text-[12px] lg:text-[14px] text-gray mb-1'>Total Payment</p>
-                            <h3 className='text-[24px] md:text-[28px] text-[32px] font-Helvetica'>$112.99</h3>
+                            <h3 className='text-[24px] md:text-[28px] lg:text-[32px] font-Helvetica'>${currentOrder?.total?.toFixed(2) || '0.00'}</h3>
                         </div>
                         <Row className='text-left'>
-                            <Col className='col-6 mb-3'><p className='text-[12px] lg:text-[14px] text-gray mb-1'>Ref Number</p><h5 className='text-[14px] lg:text-[16px]'>0981727198201</h5><hr className="border-[#E5E5E5] mt-3" /></Col>
-                            <Col className='col-6 mb-3'><p className='text-[12px] lg:text-[14px] text-gray mb-1'>Transaction Date</p><h5 className='text-[14px] lg:text-[16px]'>Thursday, May 11 2023</h5><hr className="border-[#E5E5E5] mt-3" /></Col>
-                            <Col className='col-6 mb-3'><p className='text-[12px] lg:text-[14px] text-gray mb-1'>Payment Method</p><h5 className='text-[14px] lg:text-[16px]'>PayPal</h5><hr className="border-[#E5E5E5] mt-3" /></Col>
-                            <Col className='col-6 mb-3'><p className='text-[12px] lg:text-[14px] text-gray mb-1'>Shipping Method</p><h5 className='text-[14px] lg:text-[16px]'>DHL <span className='text-[#A3A3A3]'>(3 business days)</span></h5><hr className="border-[#E5E5E5] mt-3" /></Col>
+                            <Col className='col-6 mb-3'>
+                                <p className='text-[12px] lg:text-[14px] text-gray mb-1'>Ref Number</p>
+                                <h5 className='text-[14px] lg:text-[16px]'>{currentOrder?.ref || '-'}</h5>
+                                <hr className="border-[#E5E5E5] mt-3" />
+                            </Col>
+                            <Col className='col-6 mb-3'>
+                                <p className='text-[12px] lg:text-[14px] text-gray mb-1'>Transaction Date</p>
+                                <h5 className='text-[14px] lg:text-[16px]'>{formatDate(currentOrder?.date)}</h5>
+                                <hr className="border-[#E5E5E5] mt-3" />
+                            </Col>
+                            <Col className='col-6 mb-3'>
+                                <p className='text-[12px] lg:text-[14px] text-gray mb-1'>Payment Method</p>
+                                <h5 className='text-[14px] lg:text-[16px]'>{currentOrder?.paymentMethod || 'Card'}</h5>
+                                <hr className="border-[#E5E5E5] mt-3" />
+                            </Col>
+                            <Col className='col-6 mb-3'>
+                                <p className='text-[12px] lg:text-[14px] text-gray mb-1'>Shipping Method</p>
+                                <h5 className='text-[14px] lg:text-[16px]'>DHL <span className='text-[#A3A3A3]'>(3 business days)</span></h5>
+                                <hr className="border-[#E5E5E5] mt-3" />
+                            </Col>
                         </Row>
                         <h5 className='font-medium text-[16px] lg:text-[18px] mt-2 mb-3 text-left'>Your Order</h5>
-                        <div className="flex items-center gap-3 mb-3">
-                            <img src="./../images/it (2).png" className='w-[96px] h-[96px] rounded-[4px] object-cover' alt="" />
-                            <div className='text-left'>
-                                <h4 className='font-semibold text-[16px] lg:text-[18px]'>Winter Coat</h4>
-                                <p className='text-[16px] lg:text-[18px] text-[#A3A3A3] my-1'>Beiges <span className='font-medium text-black'>M</span></p>
-                                <p className='text-[16px] lg:text-[18px] text-[#A3A3A3]'><span className='font-medium text-black'>$124.99</span> x1</p>
+                        {currentOrder?.items?.map((item, i) => (
+                            <div key={i} className="flex items-center gap-3 mb-3">
+                                <img src={item.img || './../images/it (2).png'} className='w-[96px] h-[96px] rounded-[4px] object-cover' alt={item.name} />
+                                <div className='text-left'>
+                                    <h4 className='font-semibold text-[16px] lg:text-[18px]'>{item.name}</h4>
+                                    <p className='text-[16px] lg:text-[18px] text-[#A3A3A3] my-1'>
+                                        {item.selectedColor && (
+                                            <span className='inline-block w-[12px] h-[12px] rounded-full mr-1 align-middle' style={{ backgroundColor: item.selectedColor }}></span>
+                                        )}
+                                        <span className='font-medium text-black'>{item.selectedSize}</span>
+                                    </p>
+                                    <p className='text-[16px] lg:text-[18px] text-[#A3A3A3]'><span className='font-medium text-black'>${item.price}</span> x{item.qty}</p>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                         <div className="mt-4 mb-6 flex items-center flex-wrap gap-3">
-                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Subtotal</span><span className='font-semibold text-black'>$124.99</span></div>
-                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Discount</span><span className='font-semibold text-black'>-$12</span></div>
-                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Shipping Cost</span><span className='font-semibold text-black'>-Free</span></div>
+                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Subtotal</span><span className='font-semibold text-black'>${currentOrder?.total?.toFixed(2) || '0.00'}</span></div>
+                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Discount</span><span className='font-semibold text-black'>-$0</span></div>
+                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Shipping Cost</span><span className='font-semibold text-black'>Free</span></div>
                             <hr className='border-[#E5E5E5] w-full' />
-                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Total</span><span className='font-semibold text-black'>$124.99</span></div>
+                            <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Total</span><span className='font-semibold text-black'>${currentOrder?.total?.toFixed(2) || '0.00'}</span></div>
                         </div>
                         <div className="mt-4 grid grid-cols-2 grid-rows-1 gap-4">
                             <div onClick={handleClose} className='cursor-pointer btnClass !px-[12px] sm:!px-[24px] font-medium text-[12px] lg:text-[14px] bg-transparent !border-transparent text-black'>Continue Shopping</div>
@@ -112,22 +165,40 @@ const Payment = () => {
                             <AnimatedSection animation="fade-right" delay="anim-delay-200">
                                 <div className="px-6 py-6 border border-solid border-[#E5E5E5] rounded-[16px]">
                                     <h4 className='font-bold text-[18px] lg:text-[24px] mb-2'>Order Summary</h4>
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <img src="./../images/it (2).png" className='w-[96px] h-[96px] rounded-[4px] object-cover' alt="" />
-                                        <div>
-                                            <h4 className='font-semibold text-[16px] lg:text-[18px]'>Winter Coat</h4>
-                                            <p className='text-[16px] lg:text-[18px] text-[#A3A3A3] my-1'>Beiges <span className='font-medium text-black'>M</span></p>
-                                            <p className='text-[16px] lg:text-[18px] text-[#A3A3A3]'><span className='font-medium text-black'>$124.99</span> x1</p>
+                                    {cartItems.length > 0 ? (
+                                        cartItems.map(item => (
+                                            <div key={item.cartId} className="flex items-center gap-3 mb-3">
+                                                <img src={item.img || './../images/it (2).png'} className='w-[96px] h-[96px] rounded-[4px] object-cover' alt={item.name} />
+                                                <div>
+                                                    <h4 className='font-semibold text-[16px] lg:text-[18px]'>{item.name}</h4>
+                                                    <p className='text-[16px] lg:text-[18px] text-[#A3A3A3] my-1'>
+                                                        {item.selectedColor && (
+                                                            <span className='inline-block w-[12px] h-[12px] rounded-full mr-1 align-middle' style={{ backgroundColor: item.selectedColor }}></span>
+                                                        )}
+                                                        <span className='font-medium text-black'>{item.selectedSize}</span>
+                                                    </p>
+                                                    <p className='text-[16px] lg:text-[18px] text-[#A3A3A3]'><span className='font-medium text-black'>${item.price}</span> x{item.qty}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <img src="./../images/it (2).png" className='w-[96px] h-[96px] rounded-[4px] object-cover' alt="" />
+                                            <div>
+                                                <h4 className='font-semibold text-[16px] lg:text-[18px]'>Winter Coat</h4>
+                                                <p className='text-[16px] lg:text-[18px] text-[#A3A3A3] my-1'>Beiges <span className='font-medium text-black'>M</span></p>
+                                                <p className='text-[16px] lg:text-[18px] text-[#A3A3A3]'><span className='font-medium text-black'>$124.99</span> x1</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                     <p className='text-[18px] text-[#A3A3A3] mb-2'>Discount Code</p>
                                     <Form.Control type="text" className='text-[12px] lg:text-[14px] h-[56px] outline-none shadow-none border-[#E5E5E5] rounded-[8px] focus:border-[#E5E5E5]' placeholder="Input discount code" />
                                     <div className="mt-4 mb-6 flex items-center flex-wrap gap-3">
-                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Subtotal</span><span className='font-medium'>$124.99</span></div>
-                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Discount</span><span className='font-medium'>-$12</span></div>
-                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Shipping Cost</span><span className='font-medium'>-Free</span></div>
+                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Subtotal</span><span className='font-medium'>${subtotal.toFixed(2)}</span></div>
+                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Discount</span><span className='font-medium'>-$0</span></div>
+                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Shipping Cost</span><span className='font-medium'>Free</span></div>
                                         <hr className='border-[#E5E5E5] w-full' />
-                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Total</span><span className='font-medium'>$124.99</span></div>
+                                        <div className="flex items-center justify-between text-[16px] lg:text-[18px] w-full"><span className='text-gray'>Total</span><span className='font-medium'>${total.toFixed(2)}</span></div>
                                     </div>
                                     <a href="#!" onClick={handleShow} className='btnClass large font-medium text-[14px] lg:text-[16px] bg-orange !border-orange text-white w-full text-center'>Continue To Payment</a>
                                 </div>
