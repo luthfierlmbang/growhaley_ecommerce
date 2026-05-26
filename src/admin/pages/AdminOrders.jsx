@@ -34,21 +34,21 @@ const AdminOrders = () => {
             </div>
 
             {/* Filters */}
-            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[16px] px-6 py-4 mb-4 flex flex-wrap items-center gap-3">
+            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] px-6 py-4 mb-4 flex flex-wrap items-center gap-3">
                 <input
                     type="text"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     placeholder="Search by ref or customer..."
-                    className="h-[40px] px-4 border border-solid border-[#E5E5E5] rounded-full text-[13px] outline-none focus:border-[#171717] transition-colors w-full sm:w-[260px]"
+                    className="h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-full text-[14px] outline-none focus:border-black transition-colors w-full sm:w-[260px]"
                 />
                 <div className="flex items-center gap-2 flex-wrap">
                     {STATUS_OPTIONS.map(s => (
                         <button
                             key={s}
                             onClick={() => setFilter(s)}
-                            className={`px-4 py-[6px] rounded-full text-[12px] font-medium border border-solid transition-colors ` +
-                                (filter === s ? 'bg-[#171717] text-white border-[#171717]' : 'border-[#E5E5E5] text-gray hover:border-[#171717] hover:text-black')}
+                            className={`px-4 py-[8px] rounded-full text-[12px] font-medium border border-solid transition-colors ` +
+                                (filter === s ? 'bg-black text-white border-black' : 'border-[#E5E5E5] text-gray hover:border-black hover:text-black')}
                         >
                             {s}
                         </button>
@@ -57,7 +57,7 @@ const AdminOrders = () => {
             </div>
 
             {/* Table */}
-            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[16px] overflow-hidden">
+            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-[13px]">
                         <thead className="border-b border-solid border-[#E5E5E5] bg-[#F8F8F8]">
@@ -120,7 +120,7 @@ const AdminOrders = () => {
             {/* ── Order Detail Modal ── */}
             {selected && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.5)' }}>
-                    <div className="bg-white rounded-[16px] w-full max-w-[560px] max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white rounded-[24px] w-full max-w-[560px] max-h-[90vh] overflow-y-auto">
                         <div className="px-6 py-5 border-b border-solid border-[#E5E5E5] flex items-center justify-between">
                             <h4 className="font-Helvetica font-normal text-[18px]">Order {selected.ref}</h4>
                             <button onClick={() => setSelected(null)} className="text-gray hover:text-black transition-colors">
@@ -173,7 +173,7 @@ const AdminOrders = () => {
                                                 updateOrderStatus(selected.ref, s)
                                                 setSelected({ ...selected, status: s })
                                             }}
-                                            className="py-2 px-4 rounded-[8px] text-[13px] font-medium border border-solid transition-all"
+                                            className="py-[10px] px-4 rounded-full text-[13px] font-medium border border-solid transition-all"
                                             style={{
                                                 backgroundColor: isActive ? sc.bg : 'white',
                                                 color: isActive ? sc.text : '#525252',
