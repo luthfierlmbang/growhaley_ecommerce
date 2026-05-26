@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAdmin } from '../context/AdminContext'
+import GlobalSearch from './components/GlobalSearch'
+import NotificationBell from './components/NotificationBell'
 
 const NAV = [
     {
@@ -25,12 +27,37 @@ const NAV = [
     },
 ]
 
+/* ── Breadcrumb map ── */
+const BREADCRUMBS = {
+    '/admin':            'Overview',
+    '/admin/orders':     'Orders',
+    '/admin/inventory':  'Products',
+    '/admin/customers':  'Customers',
+    '/admin/blogs':      'Content',
+}
+
 const AdminLayout = () => {
     const { adminUser, adminLogout } = useAdmin()
     const navigate = useNavigate()
+    const location = useLocation()
     const [sidebarOpen, setSidebarOpen] = useState(true)
+    const [searchOpen, setSearchOpen] = useState(false)
 
     const handleLogout = () => { adminLogout(); navigate('/admin/login') }
+
+    const breadcrumb = BREADCRUMBS[location.pathname] || 'Admin'
+
+    /* ── ⌘K / Ctrl+K shortcut ── */
+    useEffect(() => {
+        const handler = (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault()
+                setSearchOpen(o => !o)
+            }
+        }
+        window.addEventListener('keydown', handler)
+        return () => window.removeEventListener('keydown', handler)
+    }, [])
 
     return (
         <div className="min-h-screen bg-[#F6F6F6] flex">
@@ -92,24 +119,52 @@ const AdminLayout = () => {
 
             {/* ── Main ── */}
             <div className="flex-1 flex flex-col min-w-0">
-                {/* Topbar */}
-                <header className="bg-white border-b border-solid border-[#E5E5E5] px-6 py-4 flex items-center gap-4 sticky top-0 z-[50]">
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray hover:text-black transition-colors">
+                {/* Topbar: [hamburger] [breadcrumb] [flex-1] [search] [notif] [divider] [view store] [user] */}
+                <header className="bg-white border-b border-solid border-[#E5E5E5] px-6 py-4 flex items-center gap-3 sticky top-0 z-[50]">
+                    {/* Hamburger */}
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray hover:text-black transition-colors flex-shrink-0">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
                     </button>
-                    {/* Breadcrumb placeholder */}
+
+                    {/* Breadcrumb */}
+                    <div className="flex items-center gap-2 text-[13px]">
+                        <span className="text-gray">Admin</span>
+                        <span className="text-gray">/</span>
+                        <span className="font-medium text-black">{breadcrumb}</span>
+                    </div>
+
+                    {/* Spacer */}
                     <div className="flex-1" />
-                    {/* Right side */}
-                    <div className="flex items-center gap-3">
-                        <NavLink to="/" target="_blank" className="text-[12px] text-gray hover:text-black transition-colors flex items-center gap-1">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                            View Store
-                        </NavLink>
-                        <div className="w-[1px] h-[16px] bg-[#E5E5E5]"></div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-[8px] h-[8px] rounded-full bg-green-500"></div>
-                            <span className="text-[13px] text-gray font-medium">{adminUser?.name}</span>
-                        </div>
+
+                    {/* Search button */}
+                    <button
+                        onClick={() => setSearchOpen(true)}
+                        className="flex items-center gap-2 px-3 py-[6px] rounded-full border border-solid border-[#E5E5E5] text-gray hover:border-orange hover:text-black transition-colors text-[12px]"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.8"/>
+                            <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                        </svg>
+                        <span className="hidden sm:inline">Search</span>
+                        <kbd className="hidden sm:inline text-[10px] bg-[#F6F6F6] border border-solid border-[#E5E5E5] rounded-[4px] px-1">⌘K</kbd>
+                    </button>
+
+                    {/* Notification Bell */}
+                    <NotificationBell />
+
+                    {/* Divider */}
+                    <div className="w-[1px] h-[16px] bg-[#E5E5E5] flex-shrink-0"></div>
+
+                    {/* View Store */}
+                    <NavLink to="/" target="_blank" className="text-[12px] text-gray hover:text-black transition-colors flex items-center gap-1 flex-shrink-0">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        View Store
+                    </NavLink>
+
+                    {/* User */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="w-[8px] h-[8px] rounded-full bg-green-500"></div>
+                        <span className="text-[13px] text-gray font-medium hidden sm:inline">{adminUser?.name}</span>
                     </div>
                 </header>
 
@@ -117,6 +172,9 @@ const AdminLayout = () => {
                     <Outlet />
                 </main>
             </div>
+
+            {/* Global Search Overlay */}
+            <GlobalSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
         </div>
     )
 }
