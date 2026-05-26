@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
+import { NavLink } from 'react-router-dom'
 import AnimatedSection from '../Components/Common/AnimatedSection'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
@@ -69,57 +70,72 @@ const Orders = () => {
                     </AnimatedSection>
 
                     <AnimatedSection animation="fade-up" delay="anim-delay-100">
-                        <Row className='py-6 hidden lg:flex'>
-                            <Col md={4}><h4 className='text-[16px] text-[#A3A3A3]'>Order</h4></Col>
-                            <Col md={2}><h4 className='text-[16px] text-[#A3A3A3] text-center'>Date</h4></Col>
-                            <Col md={2}><h4 className='text-[16px] text-[#A3A3A3] text-center'>Ref Number</h4></Col>
-                            <Col md={2}><h4 className='text-[16px] text-[#A3A3A3] text-center'>Total</h4></Col>
-                            <Col md={2}><h4 className='text-[16px] text-[#A3A3A3] text-right'>Status</h4></Col>
+                        <Row className='py-6 hidden lg:flex border-b border-solid border-[#E5E5E5]'>
+                            <Col md={4}><h4 className='text-[14px] text-[#A3A3A3]'>Order</h4></Col>
+                            <Col md={2}><h4 className='text-[14px] text-[#A3A3A3] text-center'>Date</h4></Col>
+                            <Col md={2}><h4 className='text-[14px] text-[#A3A3A3] text-center'>Ref Number</h4></Col>
+                            <Col md={1}><h4 className='text-[14px] text-[#A3A3A3] text-center'>Total</h4></Col>
+                            <Col md={3}><h4 className='text-[14px] text-[#A3A3A3] text-right'>Actions</h4></Col>
                         </Row>
                     </AnimatedSection>
 
                     {[...orders].reverse().map((order, i) => (
                         <AnimatedSection key={order.ref} animation="fade-up" delay={`anim-delay-${(i + 1) * 100}`}>
                             <div className="py-6 border-t border-solid border-[#E5E5E5]">
-                                <Row>
-                                    <Col className='mb-2 mb-lg-0' lg={4}>
+                                <Row className='items-center'>
+                                    <Col className='mb-3 mb-lg-0' lg={4}>
                                         <div className='flex flex-wrap gap-2'>
-                                            {order.items?.slice(0, 3).map((item, idx) => (
+                                            {order.items?.slice(0, 2).map((item, idx) => (
                                                 <div key={idx} className='flex items-center gap-3'>
                                                     <img
-                                                        src={item.img || '/images/it (4).png'}
-                                                        className='w-[64px] h-[64px] rounded-[8px] object-cover'
+                                                        src={item.img || '/images/p (2).png'}
+                                                        className='w-[64px] h-[64px] rounded-[8px] object-cover flex-shrink-0'
                                                         alt={item.name}
                                                     />
                                                     <div>
-                                                        <h4 className='font-semibold text-[16px] mb-1'>{item.name}</h4>
-                                                        <p className='text-[14px] text-[#A3A3A3]'>
+                                                        <h4 className='font-semibold text-[14px] lg:text-[16px] mb-1'>{item.name}</h4>
+                                                        <p className='text-[12px] text-[#A3A3A3]'>
                                                             {item.selectedColor && (
                                                                 <span className='inline-block w-[10px] h-[10px] rounded-full mr-1 align-middle' style={{ backgroundColor: item.selectedColor }}></span>
                                                             )}
-                                                            {item.selectedSize} &nbsp;×{item.qty}
+                                                            {item.selectedSize && <span>Size {item.selectedSize} &nbsp;</span>}
+                                                            ×{item.qty}
                                                         </p>
                                                     </div>
                                                 </div>
                                             ))}
-                                            {order.items?.length > 3 && (
-                                                <p className='text-[14px] text-[#A3A3A3] self-center'>+{order.items.length - 3} more</p>
+                                            {order.items?.length > 2 && (
+                                                <p className='text-[12px] text-[#A3A3A3] self-center'>+{order.items.length - 2} more items</p>
                                             )}
                                         </div>
                                     </Col>
                                     <Col className='mb-2 my-lg-auto lg:text-center' lg={2}>
-                                        <p className='text-[14px] lg:text-[16px]'>{formatDate(order.date)}</p>
+                                        <p className='text-[12px] lg:text-[14px] text-gray'>{formatDate(order.date)}</p>
                                     </Col>
                                     <Col className='mb-2 my-lg-auto lg:text-center' lg={2}>
-                                        <p className='text-[14px] lg:text-[16px] font-medium'>{order.ref}</p>
+                                        <p className='text-[13px] lg:text-[14px] font-medium'>{order.ref}</p>
                                     </Col>
-                                    <Col className='mb-2 my-lg-auto lg:text-center' lg={2}>
-                                        <p className='text-[16px] lg:text-[18px] font-medium'>${order.total?.toFixed(2)}</p>
+                                    <Col className='mb-2 my-lg-auto lg:text-center' lg={1}>
+                                        <p className='text-[15px] lg:text-[16px] font-semibold'>${order.total?.toFixed(2)}</p>
                                     </Col>
-                                    <Col className='mb-2 my-lg-auto lg:text-right' lg={2}>
-                                        <span className='inline-block font-medium text-[12px] lg:text-sm text-orange !border-orange btnClass'>
-                                            {order.status || 'Completed'}
-                                        </span>
+                                    <Col className='mb-2 my-lg-auto' lg={3}>
+                                        <div className="flex items-center justify-start lg:justify-end gap-2 flex-wrap">
+                                            <span className='inline-block font-medium text-[11px] px-3 py-[4px] rounded-full bg-[#F0FDF4] text-green-600 border border-solid border-green-200'>
+                                                {order.status || 'Completed'}
+                                            </span>
+                                            <NavLink
+                                                to={`/orders/${order.ref}`}
+                                                className='font-medium text-[12px] px-4 py-[6px] border border-solid !border-[#E5E5E5] rounded-full text-black hover:bg-black hover:text-white transition-colors'
+                                            >
+                                                View Details
+                                            </NavLink>
+                                            <NavLink
+                                                to={`/orders/${order.ref}`}
+                                                className='font-medium text-[12px] px-4 py-[6px] border border-solid !border-orange rounded-full text-orange hover:bg-orange hover:text-white transition-colors'
+                                            >
+                                                Track Order
+                                            </NavLink>
+                                        </div>
                                     </Col>
                                 </Row>
                             </div>

@@ -18,6 +18,7 @@ import Tracking from './Pages/Tracking';
 import Privacy from './Pages/Privacy';
 import Terms from './Pages/Terms';
 import Orders from './Pages/Orders';
+import OrderDetail from './Pages/OrderDetail';
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />
         <Route path="orders" element={<Orders />} />
+        <Route path="orders/:ref" element={<OrderDetail />} />
       </Route>
     </Routes>
   )
