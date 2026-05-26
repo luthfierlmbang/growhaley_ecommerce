@@ -8,6 +8,17 @@ import Subscribe from '../Components/Pages/Subscribe'
 import { NavLink } from 'react-router-dom'
 import { dataProduct } from '../data/products'
 import AnimatedSection from '../Components/Common/AnimatedSection'
+import useCountUp from '../hooks/useCountUp'
+
+/* ── Animated stat number ── */
+const StatNumber = ({ target, suffix = '' }) => {
+    const [ref, count] = useCountUp(target, 1800)
+    return (
+        <span ref={ref}>
+            {count}{suffix}
+        </span>
+    )
+}
 
 const Homepage = () => {
     return (
@@ -34,11 +45,15 @@ const Homepage = () => {
                                         <div className="mt-[3rem] md:mt-[6rem]">
                                             <div className="flex gap-4">
                                                 <div>
-                                                    <h4 className='font-normal font-Helvetica text-[24px] md:text-[32px] xl:text-[46px]'>80+</h4>
+                                                    <h4 className='font-normal font-Helvetica text-[24px] md:text-[32px] xl:text-[46px]'>
+                                                        <StatNumber target={80} suffix="+" />
+                                                    </h4>
                                                     <p className='text-[14px] lg:text-[16px] text-gray'>Unique Style</p>
                                                 </div>
                                                 <div>
-                                                    <h4 className='font-normal font-Helvetica text-[24px] md:text-[32px] xl:text-[46px]'>40+</h4>
+                                                    <h4 className='font-normal font-Helvetica text-[24px] md:text-[32px] xl:text-[46px]'>
+                                                        <StatNumber target={40} suffix="+" />
+                                                    </h4>
                                                     <p className='text-[14px] lg:text-[16px] text-gray'>Brand Trusted</p>
                                                 </div>
                                             </div>
