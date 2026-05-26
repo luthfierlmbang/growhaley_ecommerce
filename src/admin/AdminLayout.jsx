@@ -163,7 +163,7 @@ const AdminLayout = () => {
                             <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
                         </svg>
                         <span className="hidden sm:inline">Search</span>
-                        <kbd className="hidden sm:inline text-[10px] bg-[#F6F6F6] border border-solid border-[#E5E5E5] rounded-[4px] px-1">⌘K</kbd>
+                        <span className="hidden sm:inline text-[10px] text-[#A3A3A3] font-mono">⌘K</span>
                     </button>
 
                     {/* Notification Bell */}
