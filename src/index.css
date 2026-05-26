@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   ANIMATION KEYFRAMES
+   ============================================ */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(60px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   ANIMATION UTILITY CLASSES
+   ============================================ */
+
+/* Base: hidden until animated */
+.anim-hidden {
+    opacity: 0;
+}
+
+/* Triggered when .is-visible is added */
+.anim-fade-in.is-visible {
+    animation: fadeIn 0.7s ease forwards;
+}
+
+.anim-fade-up.is-visible {
+    animation: fadeInUp 0.7s ease forwards;
+}
+
+.anim-fade-down.is-visible {
+    animation: fadeInDown 0.7s ease forwards;
+}
+
+.anim-fade-left.is-visible {
+    animation: fadeInLeft 0.7s ease forwards;
+}
+
+.anim-fade-right.is-visible {
+    animation: fadeInRight 0.7s ease forwards;
+}
+
+.anim-scale-in.is-visible {
+    animation: scaleIn 0.6s ease forwards;
+}
+
+.anim-slide-up.is-visible {
+    animation: slideInUp 0.8s ease forwards;
+}
+
+/* Stagger delays */
+.anim-delay-100 { animation-delay: 0.1s !important; }
+.anim-delay-200 { animation-delay: 0.2s !important; }
+.anim-delay-300 { animation-delay: 0.3s !important; }
+.anim-delay-400 { animation-delay: 0.4s !important; }
+.anim-delay-500 { animation-delay: 0.5s !important; }
+.anim-delay-600 { animation-delay: 0.6s !important; }
+.anim-delay-700 { animation-delay: 0.7s !important; }
+.anim-delay-800 { animation-delay: 0.8s !important; }
+
+/* Page transition wrapper */
+.page-enter {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+html,
+body {
+    font-family: "Inter", sans-serif;
+    @apply text-base text-black
+}
+
+.container {
+    max-width: 1300px;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        max-width: 92%;
+    }
+}
+
+section {
+    padding: 80px 0;
+}
+
+
+/* start:btn */
+/* outline */
+.btnClass {
+    @apply px-[24px] py-[12px] rounded-full border border-solid leading-6 inline-block
+}
+
+.btnClass.large {
+    @apply px-[24px] py-[16px]
+}
+
+
+/* outline */
+
+/* end:btn */
+
+.modal-backdrop.show {
+    background-color: rgba(23, 23, 23, 0.08) !important;
+    backdrop-filter: blur(100px);
+}
+
+.fieldInput {
+    @apply bg-transparent h-[58px] px-4 rounded-full border border-solid border-[#E5E5E5] outline-none
+}
+
+.fieldInput:hover,
+.fieldInput:focus,
+.fieldInput:active {
+    @apply bg-transparent h-[58px] px-4 rounded-full border border-solid border-[#E5E5E5] outline-none
+}
+
+.arrowPlus {
+    @apply relative p-[0.3rem]
+}
+
+.arrowPlus span {
+    transition: .5s;
+    @apply inline-block w-full h-[1px] bg-black absolute
+}
+
+.arrowPlus span:nth-child(1) {
+    @apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+}
+
+.arrowPlus span:nth-child(2) {
+    @apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[90deg]
+}
+
+.arrowPlus.active span {
+    @apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[0]
+}
+
+.line__three::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background-color: #E5E5E5;
+    left: 1.5rem;
+    top: 0;
+    z-index: -2;
+}
+
+.last__comment-line>div:last-child::after {
+    content: "";
+    position: absolute;
+    left: -2.5rem;
+    width: 1px;
+    background-color: white;
+    height: 100%;
+    bottom: 0;
+    z-index: -1;
+}
+
+.barIcon{
+    @apply flex flex-wrap gap-1
+}
+.barIcon div{
+    @apply w-full h-[2px] inline-block bg-[#171717] rounded-sm transition-all duration-500
+}
+.barIcon.active div:nth-child(1){
+    @apply absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rotate-45
+}
+.barIcon.active div:nth-child(2){
+    @apply hidden
+}
+.barIcon.active div:nth-child(3){
+    @apply absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 -rotate-45
+}
+
+.menuMobile{
+    @apply left-0 -top-[100vh] md:hidden transition-all duration-500
+}
+.menuMobile.active{
+    @apply top-0
+}
+
+
+
+.bgDropPopup {
+    background: rgba(23, 23, 23, 0.08);
+    backdrop-filter: blur(4px);
+}
+
+ /* Hide scrollbar for Chrome, Safari, and Opera */
+ .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  /* Hide scrollbar for IE, Edge, and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
