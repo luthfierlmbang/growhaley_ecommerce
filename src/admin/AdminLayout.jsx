@@ -71,7 +71,7 @@ const AdminLayout = () => {
     return (
         <div className="min-h-screen bg-[#F6F6F6] flex">
             {/* ── Sidebar ── */}
-            <aside className={`${sidebarOpen ? 'w-[240px]' : 'w-[68px]'} bg-[#171717] flex flex-col transition-all duration-300 flex-shrink-0 min-h-screen`}>
+            <aside className={`${sidebarOpen ? 'w-[240px]' : 'w-[68px]'} bg-[#171717] flex flex-col transition-all duration-300 flex-shrink-0 sticky top-0 h-screen overflow-y-auto`}>
                 {/* Logo */}
                 <div className="flex items-center gap-3 px-4 py-5 border-b border-solid border-[#2a2a2a]">
                     <div className="w-[36px] h-[36px] rounded-full bg-orange flex items-center justify-center flex-shrink-0">
@@ -127,7 +127,7 @@ const AdminLayout = () => {
             </aside>
 
             {/* ── Main ── */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 min-h-screen">
                 {/* Topbar: [hamburger] [breadcrumb] [flex-1] [search] [notif] [divider] [view store] [user] */}
                 <header className="bg-white border-b border-solid border-[#E5E5E5] px-6 py-4 flex items-center gap-3 sticky top-0 z-[50]">
                     {/* Hamburger */}

@@ -464,7 +464,7 @@ const AdminOrders = () => {
             </div>
 
             {/* Filter tabs + Save View */}
-            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] px-6 pt-4 pb-0 mb-2">
+            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] px-6 pt-5 pb-0 mb-2">
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1 overflow-x-auto flex-1">
                         {TABS.map(t => (
@@ -501,9 +501,15 @@ const AdminOrders = () => {
             )}
 
             {/* Search + Filters */}
-            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] px-6 py-4 mb-4 flex items-center gap-3 flex-wrap">
-                <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by ref, customer, or email..."
-                    className="h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-full text-[14px] outline-none focus:border-black transition-colors flex-1 min-w-[200px] sm:max-w-[320px]" />
+            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] p-6 mb-4 flex items-center gap-3 flex-wrap">
+                <div className="flex-1 relative min-w-[200px] sm:max-w-[320px]">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="absolute left-4 top-1/2 -translate-y-1/2 text-gray pointer-events-none">
+                        <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.8"/>
+                        <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                    </svg>
+                    <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by ref, customer, or email..."
+                        className="w-full h-[44px] pl-10 pr-4 border border-solid border-[#E5E5E5] rounded-full text-[14px] outline-none focus:border-black transition-colors" />
+                </div>
                 <div className="relative" ref={filtersRef}>
                     <button onClick={() => setShowFilters(p => !p)}
                         className={`h-[48px] px-5 rounded-full border border-solid text-[13px] font-medium flex items-center gap-2 transition-colors ` + (activeFilterCount > 0 ? 'border-orange text-orange bg-[#FFF7ED]' : 'border-[#E5E5E5] hover:border-black')}>
@@ -523,13 +529,18 @@ const AdminOrders = () => {
 
             {/* Table */}
             <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] overflow-hidden">
-                {/* Column toggle button */}
-                <div className="flex items-center justify-end px-6 pt-4 pb-2">
+                {/* Toolbar: column toggle + bulk info */}
+                <div className="flex items-center justify-between px-6 pt-4 pb-3 border-b border-solid border-[#F5F5F5]">
+                    <div>
+                        {selected.size > 0 && (
+                            <span className="text-[13px] font-medium text-orange">{selected.size} order{selected.size > 1 ? 's' : ''} selected</span>
+                        )}
+                    </div>
                     <div className="relative" ref={colMenuRef}>
                         <button onClick={() => setShowColMenu(p => !p)}
                             className="h-[34px] px-4 rounded-full border border-solid border-[#E5E5E5] text-[12px] font-medium hover:border-black transition-colors flex items-center gap-1">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 8v4M12 16h.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-                            Columns ⚙
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                            Columns
                         </button>
                         {showColMenu && <ColVisibilityDropdown cols={colVis} onChange={toggleCol} />}
                     </div>
@@ -559,7 +570,7 @@ const AdminOrders = () => {
                                 </th>
                                 <th className="text-center text-gray font-medium px-4 py-3">Status</th>
                                 {colVis['Payment Status'] && <th className="text-center text-gray font-medium px-4 py-3">Payment</th>}
-                                <th className="text-center text-gray font-medium px-4 py-3">Action</th>
+                                <th className="text-right text-gray font-medium px-6 py-3 w-[120px]">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -600,9 +611,13 @@ const AdminOrders = () => {
                                         {colVis['Payment Status'] && <td className="px-4 py-4 text-center">
                                             <span className="text-[11px] text-gray">{order.paymentStatus}</span>
                                         </td>}
-                                        <td className="px-4 py-4 text-center" onClick={e => e.stopPropagation()}>
-                                            <button onClick={() => navigate('/admin/orders/' + order.ref)}
-                                                className="text-[12px] font-medium text-orange hover:underline">View Details</button>
+                                        <td className="px-6 py-4 text-right" onClick={e => e.stopPropagation()}>
+                                            <button
+                                                onClick={() => navigate('/admin/orders/' + order.ref)}
+                                                className="h-[34px] px-4 rounded-full bg-orange text-white text-[12px] font-medium hover:bg-[#c85e2e] transition-colors whitespace-nowrap"
+                                            >
+                                                View →
+                                            </button>
                                         </td>
                                     </tr>
                                 )
