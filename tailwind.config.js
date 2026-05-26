@@ -6,14 +6,13 @@ module.exports = {
       Inter: ["Inter", "sans-serif"],
       Helvetica: ["Helvetica", "sans-serif"],
     },
-    colors: {
-      transparent: "transparent",
-      white: "white",
-      black: "#171717",
-      orange: "#E16F3D",
-      gray: "#525252",
+    extend: {
+      colors: {
+        orange: "#E16F3D",
+        gray: "#525252",
+        black: "#171717",
+      },
     },
-    extend: {},
   },
   plugins: [],
 };
