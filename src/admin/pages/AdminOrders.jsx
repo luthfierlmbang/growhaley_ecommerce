@@ -91,7 +91,7 @@ const saveCols = (cols) => {
 const SaveViewModal = ({ tab, search, onClose, onSave }) => {
     const [name, setName] = useState('')
     return (
-        <div className="fixed inset-0 z-[500] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.5)' }}>
+        <div className="fixed inset-0 z-[500] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.5)', backdropFilter: 'blur(4px)' }}>
             <div className="bg-white rounded-[20px] w-full max-w-[380px] shadow-2xl">
                 <div className="px-5 py-4 border-b border-solid border-[#E5E5E5] flex items-center justify-between">
                     <h4 className="font-medium text-[16px]">Save View</h4>

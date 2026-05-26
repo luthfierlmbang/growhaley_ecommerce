@@ -166,7 +166,7 @@ const AdminInventory = () => {
 
             {/* ── Add / Edit Modal — Multi-step ── */}
             {(editing || adding) && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.5)' }}>
+                <div className="fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.5)', backdropFilter: 'blur(4px)' }}>
                     <div className="bg-white rounded-[24px] w-full max-w-[560px] max-h-[92vh] overflow-y-auto">
                         <div className="px-6 py-5 border-b border-solid border-[#E5E5E5] flex items-center justify-between">
                             <h4 className="font-Helvetica font-normal text-[20px]">{adding ? 'Add New Product' : 'Edit Product'}</h4>
@@ -344,7 +344,7 @@ const AdminInventory = () => {
 
             {/* ── Confirm Delete ── */}
             {confirmDelete && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.5)' }}>
+                <div className="fixed inset-0 z-[200] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.5)', backdropFilter: 'blur(4px)' }}>
                     <div className="bg-white rounded-[24px] w-full max-w-[360px] px-6 py-6 text-center">
                         <div className="w-[56px] h-[56px] rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="#DC2626" strokeWidth="1.8" strokeLinecap="round"/></svg>

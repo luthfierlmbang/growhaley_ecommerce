@@ -154,19 +154,19 @@ const MarkPackedModal = ({ order, onClose, onConfirm }) => {
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Weight (kg) *</label>
                         <input type="text" value={weight} onChange={e => setWeight(e.target.value)} placeholder="e.g. 1.2"
-                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors" />
+                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors" />
                     </div>
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Box Size</label>
                         <select value={boxSize} onChange={e => setBoxSize(e.target.value)}
-                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors bg-white">
+                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors bg-white">
                             {['Small','Medium','Large','Extra Large'].map(s => <option key={s}>{s}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Packing Notes</label>
                         <textarea value={packingNotes} onChange={e => setPackingNotes(e.target.value)} placeholder="e.g. Fragile, handle with care..."
-                            className="w-full px-4 py-3 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors min-h-[80px] resize-none" />
+                            className="w-full px-4 py-3 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors min-h-[80px] resize-none" />
                     </div>
                     <div className="flex gap-3">
                         <button onClick={onClose} className="flex-1 h-[48px] border border-solid border-[#E5E5E5] rounded-full text-[14px] font-medium hover:border-black transition-colors">Cancel</button>
@@ -205,19 +205,19 @@ const ShipOrderModal = ({ order, onClose, onConfirm }) => {
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Tracking Number *</label>
                         <input type="text" value={trackingNumber} onChange={e => setTrackingNumber(e.target.value)} placeholder="Min. 8 characters"
-                            className={`w-full h-[48px] px-4 border border-solid rounded-[12px] text-[14px] outline-none transition-colors ` + (trackingNumber && !valid ? 'border-red-400 focus:border-red-500' : 'border-[#E5E5E5] focus:border-black')} />
+                            className={`w-full h-[48px] px-4 border border-solid rounded-[8px] text-[14px] outline-none transition-colors ` + (trackingNumber && !valid ? 'border-red-400 focus:border-red-500' : 'border-[#E5E5E5] focus:border-black')} />
                         {trackingNumber && !valid && <p className="text-red-500 text-[12px] mt-1">Tracking number must be at least 8 characters</p>}
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                         <div>
                             <label className="block font-medium text-[13px] mb-2">Courier</label>
                             <input type="text" value={courier} onChange={e => setCourier(e.target.value)}
-                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors" />
+                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors" />
                         </div>
                         <div>
                             <label className="block font-medium text-[13px] mb-2">Service Type</label>
                             <select value={serviceType} onChange={e => setServiceType(e.target.value)}
-                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors bg-white">
+                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors bg-white">
                                 {['Standard','Express','Same Day'].map(s => <option key={s}>{s}</option>)}
                             </select>
                         </div>
@@ -336,7 +336,7 @@ const CancelOrderModal = ({ order, onClose, onConfirm }) => {
     const refundPreview = calcRefund(itemSelections)
 
     return (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.6)' }}>
+        <div className="fixed inset-0 z-[500] flex items-center justify-center px-4" style={{ backgroundColor: 'rgba(23,23,23,0.6)' }}>
             <div className="bg-white rounded-[24px] w-full max-w-[560px] max-h-[90vh] overflow-y-auto">
                 <div className="px-6 py-5 border-b border-solid border-[#E5E5E5] flex items-center justify-between">
                     <div>
@@ -407,12 +407,12 @@ const CancelOrderModal = ({ order, onClose, onConfirm }) => {
                         <div>
                             <label className="block font-medium text-[13px] mb-2">Refund Amount ($)</label>
                             <input type="number" value={refundAmount} onChange={e => setRefundAmount(e.target.value)} step="0.01" min="0" max={order.total}
-                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors" />
+                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors" />
                         </div>
                         <div>
                             <label className="block font-medium text-[13px] mb-2">Refund Method</label>
                             <select value={refundMethod} onChange={e => setRefundMethod(e.target.value)}
-                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors bg-white">
+                                className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors bg-white">
                                 {['Original Payment Method','Store Credit','Manual'].map(m => <option key={m}>{m}</option>)}
                             </select>
                         </div>
@@ -474,7 +474,7 @@ const AddNoteModal = ({ order, onClose, onConfirm }) => {
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Note</label>
                         <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Add a note about this order..."
-                            className="w-full px-4 py-3 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors min-h-[100px] resize-none" />
+                            className="w-full px-4 py-3 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors min-h-[100px] resize-none" />
                     </div>
                     <div className="flex items-center gap-4">
                         <button onClick={() => setInternal(true)} className={`flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-medium border border-solid transition-colors ` + (internal ? 'bg-black text-white border-black' : 'border-[#E5E5E5] text-gray hover:border-black hover:text-black')}>
@@ -572,12 +572,12 @@ const EmailCustomerModal = ({ order, onClose, onSend }) => {
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Subject</label>
                         <input type="text" value={subject} onChange={e => setSubject(e.target.value)}
-                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[12px] text-[14px] outline-none focus:border-black transition-colors" />
+                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors" />
                     </div>
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Body</label>
                         <textarea value={body} onChange={e => setBody(e.target.value)}
-                            className="w-full px-4 py-3 border border-solid border-[#E5E5E5] rounded-[12px] text-[13px] outline-none focus:border-black transition-colors min-h-[160px] resize-none" />
+                            className="w-full px-4 py-3 border border-solid border-[#E5E5E5] rounded-[8px] text-[13px] outline-none focus:border-black transition-colors min-h-[160px] resize-none" />
                     </div>
                     <button onClick={() => setPreview(p => !p)} className="text-[12px] text-orange hover:underline text-left">
                         {preview ? 'Hide preview' : 'Show email preview'}

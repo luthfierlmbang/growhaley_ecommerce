@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAdmin } from '../../context/AdminContext'
+import { PageHeader } from '../components/ui'
 
 const AdminCustomers = () => {
     const { customers } = useAdmin()
@@ -14,42 +15,42 @@ const AdminCustomers = () => {
 
     return (
         <div>
-            <div className="mb-6">
-                <h1 className="font-Helvetica font-normal text-[28px] text-[#171717]">Customers</h1>
-                <p className="text-gray text-[14px] mt-1">{customers.length} registered customers</p>
-            </div>
+            <PageHeader
+                title="Customers"
+                subtitle={`${customers.length} registered customers`}
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {[
-                    { label: 'Total Customers', value: customers.length, color: '#E16F3D' },
-                    { label: 'Active',           value: customers.filter(c => c.status === 'Active').length, color: '#16A34A' },
-                    { label: 'Inactive',         value: customers.filter(c => c.status === 'Inactive').length, color: '#A3A3A3' },
-                    { label: 'Total Revenue',    value: `$${customers.reduce((s, c) => s + c.totalSpent, 0).toFixed(2)}`, color: '#2563EB' },
+                    { label: 'Total Customers', value: customers.length },
+                    { label: 'Active',           value: customers.filter(c => c.status === 'Active').length },
+                    { label: 'Inactive',         value: customers.filter(c => c.status === 'Inactive').length },
+                    { label: 'Total Revenue',    value: `$${customers.reduce((s, c) => s + c.totalSpent, 0).toFixed(2)}` },
                 ].map(s => (
-                    <div key={s.label} className="bg-white border border-solid border-[#E5E5E5] rounded-[16px] px-5 py-4">
+                    <div key={s.label} className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] px-6 py-5">
                         <p className="text-gray text-[12px] mb-1">{s.label}</p>
-                        <h3 className="font-Helvetica font-normal text-[24px]" style={{ color: s.color }}>{s.value}</h3>
+                        <h3 className="font-Helvetica font-normal text-[28px] text-[#171717]">{s.value}</h3>
                     </div>
                 ))}
             </div>
 
             {/* Search */}
-            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[16px] px-6 py-4 mb-4">
+            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] px-6 py-4 mb-4">
                 <input
                     type="text"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     placeholder="Search by name or email..."
-                    className="h-[40px] px-4 border border-solid border-[#E5E5E5] rounded-full text-[13px] outline-none focus:border-[#171717] transition-colors w-full sm:w-[300px]"
+                    className="h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-full text-[14px] outline-none focus:border-[#171717] transition-colors w-full sm:w-[300px]"
                 />
             </div>
 
             {/* Table */}
-            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[16px] overflow-hidden">
+            <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-[13px]">
-                        <thead className="border-b border-solid border-[#E5E5E5] bg-[#F8F8F8]">
+                        <thead className="border-b border-solid border-[#E5E5E5] bg-[#F6F6F6]">
                             <tr>
                                 <th className="text-left text-gray font-medium px-6 py-3">Customer</th>
                                 <th className="text-left text-gray font-medium px-4 py-3">Joined</th>
