@@ -154,24 +154,24 @@ const MarkPackedModal = ({ order, onClose, onConfirm }) => {
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Weight (kg) *</label>
                         <input type="text" value={weight} onChange={e => setWeight(e.target.value)} placeholder="e.g. 1.2"
-                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors" />
+                            className="w-full h-[40px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[13px] outline-none focus:border-black transition-colors" />
                     </div>
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Box Size</label>
                         <select value={boxSize} onChange={e => setBoxSize(e.target.value)}
-                            className="w-full h-[48px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors bg-white">
+                            className="w-full h-[40px] px-4 border border-solid border-[#E5E5E5] rounded-[8px] text-[13px] outline-none focus:border-black transition-colors bg-white">
                             {['Small','Medium','Large','Extra Large'].map(s => <option key={s}>{s}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="block font-medium text-[13px] mb-2">Packing Notes</label>
                         <textarea value={packingNotes} onChange={e => setPackingNotes(e.target.value)} placeholder="e.g. Fragile, handle with care..."
-                            className="w-full px-4 py-3 border border-solid border-[#E5E5E5] rounded-[8px] text-[14px] outline-none focus:border-black transition-colors min-h-[80px] resize-none" />
+                            className="w-full px-4 py-2 border border-solid border-[#E5E5E5] rounded-[8px] text-[13px] outline-none focus:border-black transition-colors min-h-[72px] resize-none" />
                     </div>
                     <div className="flex gap-3">
-                        <button onClick={onClose} className="flex-1 h-[48px] border border-solid border-[#E5E5E5] rounded-full text-[14px] font-medium hover:border-black transition-colors">Cancel</button>
+                        <button onClick={onClose} className="flex-1 h-[44px] border border-solid border-[#E5E5E5] rounded-full text-[13px] font-medium hover:border-black transition-colors">Cancel</button>
                         <button onClick={() => valid && onConfirm({ weight: weight + ' kg', boxSize, packingNotes })} disabled={!valid}
-                            className="flex-1 h-[48px] bg-orange text-white rounded-full text-[14px] font-medium hover:bg-[#c85e2e] transition-colors disabled:opacity-40">
+                            className="flex-1 h-[44px] bg-orange text-white rounded-full text-[13px] font-medium hover:bg-[#c85e2e] transition-colors disabled:opacity-40">
                             Confirm Packed
                         </button>
                     </div>
@@ -953,22 +953,22 @@ const AdminOrderDetail = () => {
                 <div className="w-[360px] flex-shrink-0 flex flex-col gap-4 sticky top-[80px]">
                     {/* Customer card */}
                     <div className="bg-white border border-solid border-[#E5E5E5] rounded-[24px] px-5 py-4">
-                        <h4 className="font-medium text-[14px] mb-3 flex items-center gap-2">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="1.8"/></svg>
+                        <h4 className="font-medium text-[13px] text-gray mb-3 flex items-center gap-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="1.8"/></svg>
                             Customer
                         </h4>
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-[44px] h-[44px] rounded-full bg-orange flex items-center justify-center flex-shrink-0">
-                                <span className="text-white font-medium text-[18px]">{order.customer.charAt(0)}</span>
+                            <div className="w-[36px] h-[36px] rounded-full bg-orange flex items-center justify-center flex-shrink-0">
+                                <span className="text-white font-medium text-[14px]">{order.customer.charAt(0)}</span>
                             </div>
                             <div>
                                 <p className="font-medium text-[14px]">{order.customer}</p>
                                 <p className="text-gray text-[12px]">{order.email}</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-[12px]">
-                            <div><p className="text-gray text-[11px] mb-1">Phone</p><p className="font-medium">{order.phone || order.address?.phone || '—'}</p></div>
-                            <div><p className="text-gray text-[11px] mb-1">Orders</p><p className="font-medium">3 orders</p></div>
+                        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-solid border-[#F5F5F5] text-[12px]">
+                            <div><p className="text-gray text-[11px] mb-[2px]">Phone</p><p className="font-medium text-[13px]">{order.phone || order.address?.phone || '—'}</p></div>
+                            <div><p className="text-gray text-[11px] mb-[2px]">Orders</p><p className="font-medium text-[13px]">3 orders</p></div>
                         </div>
                     </div>
 
