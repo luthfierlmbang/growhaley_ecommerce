@@ -32,12 +32,13 @@ export const deriveStatus = (fulfillmentStatus) => {
     switch (fulfillmentStatus) {
         case 'Unfulfilled':
         case 'Picking':
-        case 'Packed':      return 'Processing'
-        case 'Shipped':     return 'Shipped'
-        case 'Delivered':   return 'Completed'
-        case 'Cancelled':   return 'Cancelled'
-        case 'Returned':    return 'Cancelled'
-        default:            return 'Processing'
+        case 'Packed':               return 'Processing'
+        case 'Shipped':              return 'Shipped'
+        case 'Delivered':            return 'Completed'
+        case 'Cancelled':            return 'Cancelled'
+        case 'Partially Cancelled':  return 'Processing'
+        case 'Returned':             return 'Cancelled'
+        default:                     return 'Processing'
     }
 }
 
@@ -109,7 +110,6 @@ const seedOrders = () => {
         // Build events based on fulfillmentStatus
         const events = []
         let eid = 1
-        // order_placed always
         events.push(mkEvent(eid++, iso(daysAgo, 0), 'order_placed', '', 'Unfulfilled', 'Order received and payment confirmed.'))
         if (paymentStatus === 'Paid') {
             events.push(mkEvent(eid++, iso(daysAgo, -1), 'payment_received', 'Pending', 'Paid', `Payment of $${total.toFixed(2)} received via ${payments[i % payments.length]}.`))
@@ -132,9 +132,19 @@ const seedOrders = () => {
             events.push(mkEvent(eid++, iso(daysAgo - 5, 0), 'delivered', 'Shipped', 'Delivered', 'Package delivered to customer.'))
         }
         if (fulfillmentStatus === 'Cancelled') {
-            events.push(mkEvent(eid++, iso(daysAgo - 1, 0), 'cancelled', fulfillmentStatus === 'Cancelled' ? 'Unfulfilled' : fulfillmentStatus, 'Cancelled', 'Order cancelled. Refund initiated.'))
+            events.push(mkEvent(eid++, iso(daysAgo - 1, 0), 'cancelled', 'Unfulfilled', 'Cancelled', 'Order cancelled. Refund initiated.'))
             events.push(mkEvent(eid++, iso(daysAgo - 1, -1), 'customer_notified', '', '', 'Customer notified of cancellation via email.'))
         }
+
+        // refundHistory seed
+        const refundHistory = fulfillmentStatus === 'Cancelled' ? [{
+            id: `RF-${String(1000 + i).padStart(4, '0')}`,
+            amount: parseFloat(total.toFixed(2)),
+            method: 'Original Payment Method',
+            reason: 'Item out of stock',
+            at: iso(daysAgo - 2, 0),
+            items: [],
+        }] : []
 
         return {
             ref:               `LUX-${String(1000 + i).padStart(4, '0')}`,
@@ -149,7 +159,6 @@ const seedOrders = () => {
             shippingCost:      courier === 'FedEx' ? 0.88 : 0,
             fulfillmentStatus,
             paymentStatus,
-            // backward-compat: derive status from fulfillmentStatus
             status,
             shippingMethod:    courier,
             paymentMethod:     payments[i % payments.length],
@@ -159,11 +168,13 @@ const seedOrders = () => {
             date:              d.toISOString(),
             cancelReason:      fulfillmentStatus === 'Cancelled' ? 'Item out of stock' : null,
             cancelMessage:     fulfillmentStatus === 'Cancelled' ? 'We apologize, your order has been cancelled due to stock unavailability. A full refund has been initiated.' : null,
+            cancelledItems:    [],
             packingNotes:      ['Packed','Shipped','Delivered'].includes(fulfillmentStatus) ? 'Handle with care. Fragile items inside.' : '',
             weight:            ['Packed','Shipped','Delivered'].includes(fulfillmentStatus) ? `${(Math.random() * 3 + 0.5).toFixed(1)} kg` : '',
             boxSize:           ['Packed','Shipped','Delivered'].includes(fulfillmentStatus) ? ['Small','Medium','Large'][i % 3] : '',
             refundedAmount:    fulfillmentStatus === 'Cancelled' ? parseFloat(total.toFixed(2)) : 0,
             refundedAt:        fulfillmentStatus === 'Cancelled' ? iso(daysAgo - 2, 0) : null,
+            refundHistory,
             slaHours,
             notes:             [],
             events,
@@ -286,24 +297,73 @@ export const AdminProvider = ({ children }) => {
         }))
     }
 
-    const cancelOrder = (ref, { reason, message, refundAmount }) => {
+    /* ── cancelOrder: supports partial cancel ── */
+    const cancelOrder = (ref, { reason, message, refundAmount, partialItems }) => {
         const at = new Date().toISOString()
         setOrders(prev => prev.map(o => {
             if (o.ref !== ref) return o
+            const isPartial = partialItems && partialItems.length > 0 && partialItems.length < o.items.length
+            const newFulfillmentStatus = isPartial ? 'Partially Cancelled' : 'Cancelled'
+            const newPaymentStatus = refundAmount > 0
+                ? (refundAmount >= o.total ? 'Refunded' : 'Partially Refunded')
+                : o.paymentStatus
+
+            const refundEntry = {
+                id: `RF-${Date.now()}`,
+                amount: refundAmount || 0,
+                method: 'Original Payment Method',
+                reason,
+                at,
+                items: partialItems || [],
+            }
+
             const newEvents = [
                 ...(o.events || []),
-                mkEvent(Date.now(), at, 'cancelled', o.fulfillmentStatus, 'Cancelled', `Cancelled: ${reason}. Refund: $${refundAmount?.toFixed(2) || '0.00'}.`),
+                mkEvent(Date.now(), at, 'cancelled', o.fulfillmentStatus, newFulfillmentStatus,
+                    `${isPartial ? 'Partial cancel' : 'Cancelled'}: ${reason}. Refund: $${(refundAmount || 0).toFixed(2)}.`),
                 mkEvent(Date.now() + 1, at, 'customer_notified', '', '', 'Customer notified of cancellation via email.'),
             ]
             return {
                 ...o,
-                fulfillmentStatus: 'Cancelled',
-                status: deriveStatus('Cancelled'),
-                paymentStatus: refundAmount > 0 ? (refundAmount >= o.total ? 'Refunded' : 'Partially Refunded') : o.paymentStatus,
+                fulfillmentStatus: newFulfillmentStatus,
+                status: deriveStatus(newFulfillmentStatus),
+                paymentStatus: newPaymentStatus,
                 cancelReason: reason,
                 cancelMessage: message,
-                refundedAmount: refundAmount || 0,
+                cancelledItems: isPartial ? partialItems : o.items,
+                refundedAmount: (o.refundedAmount || 0) + (refundAmount || 0),
                 refundedAt: at,
+                refundHistory: [...(o.refundHistory || []), refundEntry],
+                events: newEvents,
+            }
+        }))
+    }
+
+    /* ── issueRefund: standalone refund action ── */
+    const issueRefund = (ref, { amount, method, reason, items }) => {
+        const at = new Date().toISOString()
+        setOrders(prev => prev.map(o => {
+            if (o.ref !== ref) return o
+            const refundEntry = {
+                id: `RF-${Date.now()}`,
+                amount,
+                method,
+                reason,
+                at,
+                items: items || [],
+            }
+            const newRefundedAmount = (o.refundedAmount || 0) + amount
+            const newPaymentStatus = newRefundedAmount >= o.total ? 'Refunded' : 'Partially Refunded'
+            const newEvents = [
+                ...(o.events || []),
+                mkEvent(Date.now(), at, 'customer_notified', '', '', `Refund of $${amount.toFixed(2)} issued via ${method}. Reason: ${reason}.`),
+            ]
+            return {
+                ...o,
+                paymentStatus: newPaymentStatus,
+                refundedAmount: newRefundedAmount,
+                refundedAt: at,
+                refundHistory: [...(o.refundHistory || []), refundEntry],
                 events: newEvents,
             }
         }))
@@ -339,7 +399,7 @@ export const AdminProvider = ({ children }) => {
             orders,
             updateOrderStatus, addOrderNote,
             updateFulfillmentStatus, addEvent, addTrackingNumber,
-            markPacked, markShipped, markDelivered, cancelOrder, sendCustomerMessage,
+            markPacked, markShipped, markDelivered, cancelOrder, issueRefund, sendCustomerMessage,
             customers,
             blogs, updateBlog, deleteBlog,
             stats,
